@@ -12,16 +12,20 @@ using Vector3 = UnityEngine.Vector3;
 
 public class CardObject : MonoBehaviour
 {
+    public bool Hidden;
     public char Suit;
     public char Number;
     public float LerpAmount = 20.0f;
     public bool Movable = false;
     private bool FollowingMouse;
     public BlackJackHand ParentHand;
+    public bool DestroyOnArrival;
     public Vector3? FinalRestingPlace = null;
     // Start is called before the first frame update
+    public int PointValue;
     void Start()
     {
+        DestroyOnArrival = false;
         FollowingMouse = false;
     }
 
@@ -41,8 +45,12 @@ public class CardObject : MonoBehaviour
             Vector3 startingPoint = this.transform.position;
             Vector3 midPoint = Vector3.Lerp(startingPoint, (Vector3)FinalRestingPlace, LerpAmount * Time.deltaTime);
             this.transform.position = midPoint;
-            if (midPoint == FinalRestingPlace)
+            if (midPoint == FinalRestingPlace){
+                if (DestroyOnArrival){
+                    Destroy(this.gameObject);
+                }
                 FinalRestingPlace = null;
+            }
         }
     }
     void OnMouseDown(){

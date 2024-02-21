@@ -17,6 +17,7 @@ public class DeckLogic : MonoBehaviour
     }
 
     private List<Card> Deck = new List<Card>();
+    private List<Card> Discard = new List<Card>();
     // Start is called before the first frame update
     void Start()
     {
@@ -32,26 +33,42 @@ public class DeckLogic : MonoBehaviour
                 Deck.Add(curr);
             }
         }
-        // Shuffle the Cards
-        for (int c = 0; c < 52; c++)
+    }
+    public Card DrawCard()
+    {
+        Card ret;
+        if (Deck.Count == 0)
         {
-            int newLoc = Random.Range(0, 52);
+            TransferDiscard();
+            ShuffleDeck();            
+        }
+        ret = Deck[0];
+        Deck.RemoveAt(0);
+        return ret;
+    }
+
+    public void ShuffleDeck(){
+        // Shuffle the Cards
+        for (int c = 0; c < Deck.Count; c++)
+        {
+            int newLoc = Random.Range(0, Deck.Count);
             Card temp = Deck[c];
             Deck[c] = Deck[newLoc];
             Deck[newLoc] = temp;
         }
     }
-         
 
-    public Card? DrawCard()
-    {
-        Card? ret = null;
-        if (Deck.Count >= 1)
-        {
-            ret = Deck[0];
-            Deck.RemoveAt(0);
+    public void TransferDiscard(){
+        foreach (Card c in Discard){
+            Deck.Add(c);
         }
-        return ret;
+        Discard.Clear();
+    }
+
+    public void AddCardsToDiscard(List<Card> discardedHand){
+        foreach (Card card in discardedHand){
+            Discard.Add(card);
+        }
     }
 
     // Update is called once per frame
