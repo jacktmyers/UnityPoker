@@ -19,7 +19,4 @@ public class SceneSwitcher : MonoBehaviour
     public void SelectScene(int sceneNum){
         SceneManager.LoadScene(sceneNum, LoadSceneMode.Single);
     }
-    public void TestClick(){
-        Debug.Log("HELLO");
-    }
 }
