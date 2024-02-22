@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3038944612973237869}
   - component: {fileID: 6735288888807156192}
   m_Layer: 0
-  m_Name: Card
+  m_Name: BlackJackCard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

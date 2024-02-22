@@ -5,6 +5,7 @@ using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.XR;
 using static DeckLogic;
 
@@ -16,7 +17,6 @@ public class BlackJackLogic : MonoBehaviour
     public CardObjectFactory CardFactory;
     public GameObject HitDecisionButtons;
     public int GameEndTime;
-    public int CpuDrawTime;
     private System.DateTime? TimerEnd = null;
     private enum GameState{
         FIRSTBET,
@@ -24,7 +24,8 @@ public class BlackJackLogic : MonoBehaviour
         SECONDBET,
         PLAYERHIT,
         CPUHIT,
-        SETTLE
+        SETTLE,
+        GAMEEND
     };
     public GameObject BetButton;
     public TextMeshProUGUI BetTextDisplay;
@@ -132,7 +133,24 @@ public class BlackJackLogic : MonoBehaviour
                 playerLogic.CalculateTotalPoints();
                 Deck.AddCardsToDiscard(cpuHand.DiscardHand());
                 cpuLogic.CalculateTotalPoints();
-                CurrentState = GameState.FIRSTBET;
+
+                if (playerLogic.Wallet <= 0){
+                    CurrentState = GameState.GAMEEND;
+                }
+                else {
+                    CurrentState = GameState.FIRSTBET;
+                }
+                break;
+            case GameState.GAMEEND:
+                if (TimerEnd == null){
+                    TimerEnd = System.DateTime.Now.AddSeconds(GameEndTime);
+                    break;
+                }
+                else if (TimerEnd > System.DateTime.Now){
+                    break;
+                }
+                TimerEnd = null;
+                SceneManager.LoadScene(0);
                 break;
             default:
                 Debug.LogError("GameState is not set to a valid state.");
@@ -186,6 +204,10 @@ public class BlackJackLogic : MonoBehaviour
                 else{
                     SplashTextDisplay.text = "LOSS :(";
                 }
+               break;
+            case GameState.GAMEEND:
+                SplashTextDisplay.gameObject.SetActive(true);
+                SplashTextDisplay.text = "GAME OVER!";
                break;
             default:
                 Debug.LogError("GameState is not set to a valid state.");

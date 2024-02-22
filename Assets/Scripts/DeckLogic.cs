@@ -5,6 +5,9 @@ using Random = UnityEngine.Random;
 
 public class DeckLogic : MonoBehaviour
 {
+    public List<int> DebugCards;
+    public List<int> DebugSuits;
+    private int DebugCardI = 0;
     public struct Card
     {
         public char Suit { get; }
@@ -46,6 +49,11 @@ public class DeckLogic : MonoBehaviour
         Deck.RemoveAt(0);
         return ret;
     }
+    public Card DebugDrawCard(){
+        Card ret = new Card((char)DebugSuits[DebugCardI],(char)DebugCards[DebugCardI]);
+        DebugCardI = (DebugCardI+1)%5;
+        return ret;
+    }
 
     public void ShuffleDeck(){
         // Shuffle the Cards
@@ -69,6 +77,10 @@ public class DeckLogic : MonoBehaviour
         foreach (Card card in discardedHand){
             Discard.Add(card);
         }
+    }
+    public void DestroyDeck(){
+        Deck.Clear();
+        Discard.Clear();
     }
 
     // Update is called once per frame
